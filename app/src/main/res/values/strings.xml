@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PermisisonHandler</string>
+    <string name="request_camera_permission">Request Camera Permission</string>
+    <string name="request_storage_permission">Request Storage Permission</string>
+    <string name="check_camera_permission">Check Camera Permission</string>
+    <string name="check_storage_permission">Check Storage Permission</string>
+</resources>
