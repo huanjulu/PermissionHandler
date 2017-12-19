@@ -19,7 +19,7 @@ Simplifying check permissions in android
 
  - 利用这个library , 你可以很方便的在项目中检查是否拥有一系列的相关权限
  - 利用这个library , 你可以很方便的去申请你所需要的权限，比如Camera permission, Storage Permisson ...等等.
- -你可以很方便的检查用户是够勾选了 “Never ask Again”选项。并且你可以自定义你以后的操作.
+ - 你可以很方便的检查用户是够勾选了 “Never ask Again”选项。并且你可以自定义你以后的操作.
 
 
 
