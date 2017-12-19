@@ -34,176 +34,116 @@ Simplifying check permissions in android
 
 # How to Use
 
-##### First
+-  ##### First
 You nees decelar the permission what you need in your "AndroidManifest.xml" file. like
 ``` java
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 ```
 
+-  ##### Request the permissions which you need
+-  ##### 申请你所需要的权限
+``` java
+         //ask camera permission
+        PermissionHandler.requestPermission(this, AppPermission.CAMERA.INSTANCE);
+```
+``` java
+        //ask storage permission
+        PermissionHandler.requestPermission(this, AppPermission.READ_EXTERNAL_STORAGE.INSTANCE);
+```
+-  ##### In the permissions dialog of the system,listen the click event of user
+-  ##### 在系统的权限申请弹窗中，监听用户的点击事件
+
+if you do this, the first thing what you need to do is that overrive the onRequestPermissionsResult funtion ,like this 
+``` java
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        PermissionHandler.onRequestPermissionsResultReceived(requestCode, permissions, grantResults, appPermissionGranted -> {
+
+            Toast.makeText(this, " Permission Granted", Toast.LENGTH_SHORT).show();
+            // you select granted
+            return null;
+
+        }, appPermissionDenied -> {
+
+            Toast.makeText(this, " Permission Defined", Toast.LENGTH_SHORT).show();
+            // you select  defined
+            return null;
+        });
 
 
-
-You can also:
-  - Import and save files from GitHub, Dropbox, Google Drive and One Drive
-  - Drag and drop markdown and HTML files into Dillinger
-  - Export documents as Markdown, HTML and PDF
-
-Markdown is a lightweight markup language based on the formatting conventions that people naturally use in email.  As [John Gruber] writes on the [Markdown site][df1]
-
-> The overriding design goal for Markdown's
-> formatting syntax is to make it as readable
-> as possible. The idea is that a
-> Markdown-formatted document should be
-> publishable as-is, as plain text, without
-> looking like it's been marked up with tags
-> or formatting instructions.
-
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
-
-### Tech
-
-Dillinger uses a number of open source projects to work properly:
-
-* [AngularJS] - HTML enhanced for web apps!
-* [Ace Editor] - awesome web-based text editor
-* [markdown-it] - Markdown parser done right. Fast and easy to extend.
-* [Twitter Bootstrap] - great UI boilerplate for modern web apps
-* [node.js] - evented I/O for the backend
-* [Express] - fast node.js network app framework [@tjholowaychuk]
-* [Gulp] - the streaming build system
-* [Breakdance](http://breakdance.io) - HTML to Markdown converter
-* [jQuery] - duh
-
-And of course Dillinger itself is open source with a [public repository][dill]
- on GitHub.
-
-### Installation
-
-Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
-
-Install the dependencies and devDependencies and start the server.
-
-```sh
-$ cd dillinger
-$ npm install -d
-$ node app
+    }
 ```
 
-For production environments...
 
-```sh
-$ npm install --production
-$ NODE_ENV=production node app
+
+-  ##### Check to see if you have the permissions what you need
+-  ##### 检查是否拥有你所需要的权限
+
+here is some code what check camera permsiion, storage permission..so on 
+``` java
+   private void checkCameraPermission() {
+
+        PermissionHandler.checkPermission(this, AppPermission.CAMERA.INSTANCE,
+
+                //this permission was granted already
+                granted -> {
+                    Toast.makeText(this, "Camera Permission Granted", Toast.LENGTH_SHORT).show();
+                    return null;
+                },
+                //this permission was denied already
+                denied -> {
+                    Toast.makeText(this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
+                    return null;
+                },
+
+                //user select dot not ask again already
+                rationale -> {
+                    Toast.makeText(this, "Camera Permission Not Ask Again", Toast.LENGTH_SHORT).show();
+                    return null;
+                });
+    }
 ```
+``` java
 
-### Plugins
+    private void checkStoragePermission() {
+        PermissionHandler.checkPermission(this, AppPermission.READ_EXTERNAL_STORAGE.INSTANCE,
 
-Dillinger is currently extended with the following plugins. Instructions on how to use them in your own application are linked below.
+                //this permission was granted already
+                granted -> {
+                    Toast.makeText(this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+                    return null;
+                },
+                //this permission was denied already
+                denied -> {
+                    Toast.makeText(this, "Storage PermissionDenied", Toast.LENGTH_SHORT).show();
+                    return null;
+                },
 
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md] [PlDb] |
-| Github | [plugins/github/README.md] [PlGh] |
-| Google Drive | [plugins/googledrive/README.md] [PlGd] |
-| OneDrive | [plugins/onedrive/README.md] [PlOd] |
-| Medium | [plugins/medium/README.md] [PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md] [PlGa] |
-
-
-### Development
-
-Want to contribute? Great!
-
-Dillinger uses Gulp + Webpack for fast developing.
-Make a change in your file and instantanously see your updates!
-
-Open your favorite Terminal and run these commands.
-
-First Tab:
-```sh
-$ node app
+                //user select dot not ask again already
+                rationale -> {
+                    Toast.makeText(this, "Storage Permission Not Ask Again", Toast.LENGTH_SHORT).show();
+                    return null;
+                });
+    }
 ```
+-  ##### Finally,enjoy use it !!
 
-Second Tab:
-```sh
-$ gulp watch
+
+
+# License
+``` java
+  Copyright 2015 Anthony Restaino
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```
-
-(optional) Third:
-```sh
-$ karma test
-```
-#### Building for source
-For production release:
-```sh
-$ gulp build --prod
-```
-Generating pre-built zip archives for distribution:
-```sh
-$ gulp build dist --prod
-```
-### Docker
-Dillinger is very easy to install and deploy in a Docker container.
-
-By default, the Docker will expose port 8080, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.
-
-```sh
-cd dillinger
-docker build -t joemccann/dillinger:${package.json.version}
-```
-This will create the dillinger image and pull in the necessary dependencies. Be sure to swap out `${package.json.version}` with the actual version of Dillinger.
-
-Once done, run the Docker image and map the port to whatever you wish on your host. In this example, we simply map port 8000 of the host to port 8080 of the Docker (or whatever port was exposed in the Dockerfile):
-
-```sh
-docker run -d -p 8000:8080 --restart="always" <youruser>/dillinger:${package.json.version}
-```
-
-Verify the deployment by navigating to your server address in your preferred browser.
-
-```sh
-127.0.0.1:8000
-```
-
-#### Kubernetes + Google Cloud
-
-See [KUBERNETES.md](https://github.com/joemccann/dillinger/blob/master/KUBERNETES.md)
-
-
-### Todos
-
- - Write MORE Tests
- - Add Night Mode
-
-License
-----
-
-MIT
-
-
-**Free Software, Hell Yeah!**
-
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
-
-
-   [dill]: <https://github.com/joemccann/dillinger>
-   [git-repo-url]: <https://github.com/joemccann/dillinger.git>
-   [john gruber]: <http://daringfireball.net>
-   [df1]: <http://daringfireball.net/projects/markdown/>
-   [markdown-it]: <https://github.com/markdown-it/markdown-it>
-   [Ace Editor]: <http://ace.ajax.org>
-   [node.js]: <http://nodejs.org>
-   [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>
-   [jQuery]: <http://jquery.com>
-   [@tjholowaychuk]: <http://twitter.com/tjholowaychuk>
-   [express]: <http://expressjs.com>
-   [AngularJS]: <http://angularjs.org>
-   [Gulp]: <http://gulpjs.com>
-
-   [PlDb]: <https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md>
-   [PlGh]: <https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md>
-   [PlGd]: <https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md>
-   [PlOd]: <https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md>
-   [PlMe]: <https://github.com/joemccann/dillinger/tree/master/plugins/medium/README.md>
-   [PlGa]: <https://github.com/RahulHP/dillinger/blob/master/plugins/googleanalytics/README.md>
